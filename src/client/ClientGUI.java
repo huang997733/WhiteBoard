@@ -6,12 +6,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JButton;
-import javax.swing.JTextPane;
 import javax.swing.JTextArea;
+import javax.swing.JList;
+import javax.swing.ListSelectionModel;
 
 public class ClientGUI {
 
-	private JFrame frame;
+	private JFrame frmWhiteboard;
 
 	/**
 	 * Launch the application.
@@ -21,7 +22,7 @@ public class ClientGUI {
 			public void run() {
 				try {
 					ClientGUI window = new ClientGUI();
-					window.frame.setVisible(true);
+					window.frmWhiteboard.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -40,56 +41,61 @@ public class ClientGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 950, 650);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
+		frmWhiteboard = new JFrame();
+		frmWhiteboard.setTitle("WhiteBoard");
+		frmWhiteboard.setBounds(100, 100, 950, 650);
+		frmWhiteboard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmWhiteboard.getContentPane().setLayout(null);
+
 		JButton btnNewButton_6 = new JButton("Send");
 		btnNewButton_6.setBounds(850, 578, 74, 23);
-		frame.getContentPane().add(btnNewButton_6);
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		panel.setBounds(10, 49, 661, 552);
-		frame.getContentPane().add(panel);
-		
-		JButton btnNewButton = new JButton("Line");
-		btnNewButton.setBounds(126, 16, 93, 23);
-		frame.getContentPane().add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Circle");
-		btnNewButton_1.setBounds(229, 16, 93, 23);
-		frame.getContentPane().add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("Triangle");
-		btnNewButton_2.setBounds(332, 16, 93, 23);
-		frame.getContentPane().add(btnNewButton_2);
-		
-		JButton btnNewButton_3 = new JButton("Rectangle");
-		btnNewButton_3.setBounds(435, 16, 93, 23);
-		frame.getContentPane().add(btnNewButton_3);
-		
-		JTextArea typeArea = new JTextArea();
-		typeArea.setBounds(691, 502, 233, 99);
-		frame.getContentPane().add(typeArea);
-		
+		frmWhiteboard.getContentPane().add(btnNewButton_6);
+
+		JPanel canvas = new JPanel();
+		canvas.setBackground(Color.WHITE);
+		canvas.setBounds(10, 49, 661, 552);
+		frmWhiteboard.getContentPane().add(canvas);
+
+		JButton line = new JButton("Line");
+		line.setBounds(126, 16, 93, 23);
+		frmWhiteboard.getContentPane().add(line);
+
+		JButton circle = new JButton("Circle");
+		circle.setBounds(229, 16, 93, 23);
+		frmWhiteboard.getContentPane().add(circle);
+
+		JButton triangle = new JButton("Triangle");
+		triangle.setBounds(332, 16, 93, 23);
+		frmWhiteboard.getContentPane().add(triangle);
+
+		JButton rectangle = new JButton("Rectangle");
+		rectangle.setBounds(435, 16, 93, 23);
+		frmWhiteboard.getContentPane().add(rectangle);
+
+		JTextArea typeBox = new JTextArea();
+		typeBox.setBounds(691, 502, 233, 99);
+		frmWhiteboard.getContentPane().add(typeBox);
+
 		JTextArea chatBox = new JTextArea();
 		chatBox.setEditable(false);
 		chatBox.setBounds(691, 147, 233, 345);
-		frame.getContentPane().add(chatBox);
-		
-		JTextArea userList = new JTextArea();
-		userList.setEditable(false);
-		userList.setBounds(691, 49, 233, 89);
-		frame.getContentPane().add(userList);
-		
-		JButton btnNewButton_4 = new JButton("Colour");
-		btnNewButton_4.setBounds(538, 16, 93, 23);
-		frame.getContentPane().add(btnNewButton_4);
-		
-		JButton btnNewButton_5 = new JButton("Curve");
-		btnNewButton_5.setBounds(23, 16, 93, 23);
-		frame.getContentPane().add(btnNewButton_5);
+		frmWhiteboard.getContentPane().add(chatBox);
+
+		JButton colour = new JButton("Colour");
+		colour.setBounds(538, 16, 93, 23);
+		frmWhiteboard.getContentPane().add(colour);
+
+		JButton curve = new JButton("Curve");
+		curve.setBounds(23, 16, 93, 23);
+		frmWhiteboard.getContentPane().add(curve);
+
+		JButton text = new JButton("Text");
+		text.setBounds(641, 16, 93, 23);
+		frmWhiteboard.getContentPane().add(text);
+
+		JList userList = new JList();
+		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		userList.setBounds(691, 49, 233, 92);
+		frmWhiteboard.getContentPane().add(userList);
 	}
 }
