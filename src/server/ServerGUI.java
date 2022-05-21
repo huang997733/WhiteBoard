@@ -19,7 +19,7 @@ import javax.swing.ListSelectionModel;
 public class ServerGUI {
 
 	private JFrame frmWhiteboardmanager;
-
+	static JPanel canvas;
 	/**
 	 * Launch the application.
 	 */
@@ -66,26 +66,26 @@ public class ServerGUI {
 		menuBar.setBounds(0, 0, 43, 23);
 		frmWhiteboardmanager.getContentPane().add(menuBar);
 
-		JMenu mnNewMenu = new JMenu("File");
-		menuBar.add(mnNewMenu);
-		mnNewMenu.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		fileMenu.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 14));
 
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("New");
-		mnNewMenu.add(mntmNewMenuItem_1);
+		JMenuItem newFile = new JMenuItem("New");
+		fileMenu.add(newFile);
 
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Open");
-		mnNewMenu.add(mntmNewMenuItem_2);
+		JMenuItem openFile = new JMenuItem("Open");
+		fileMenu.add(openFile);
 
-		JMenuItem mntmNewMenuItem = new JMenuItem("Save");
-		mnNewMenu.add(mntmNewMenuItem);
+		JMenuItem saveFile = new JMenuItem("Save");
+		fileMenu.add(saveFile);
 
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Save as");
-		mnNewMenu.add(mntmNewMenuItem_3);
+		JMenuItem saveAs = new JMenuItem("Save as");
+		fileMenu.add(saveAs);
 
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Close");
-		mnNewMenu.add(mntmNewMenuItem_4);
+		JMenuItem closeFile = new JMenuItem("Close");
+		fileMenu.add(closeFile);
 
-		JPanel canvas = new JPanel();
+		canvas = new JPanel();
 		canvas.setBackground(Color.WHITE);
 		canvas.setBounds(10, 47, 664, 556);
 		frmWhiteboardmanager.getContentPane().add(canvas);

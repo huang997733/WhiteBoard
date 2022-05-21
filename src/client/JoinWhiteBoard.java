@@ -13,7 +13,7 @@ public class JoinWhiteBoard {
             JOptionPane.showMessageDialog(new JLabel("error"), "Please enter: <host> <port> <username>", "Wrong parameters", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
-        ClientGUI clientGUI = null;
+
         try {
             host = args[0];
             port = Integer.parseInt(args[1]);
@@ -22,12 +22,12 @@ public class JoinWhiteBoard {
                 JOptionPane.showMessageDialog(new JLabel("error"), "Invalid port: please use port between 1024 and 49151", "Illegal port number", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
-            clientGUI = new ClientGUI();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(new JLabel("error"), "Port format incorrect", "Incorrect format", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
 
-        new Client(host, port, username, clientGUI);
+        new Client(host, port, username);
     }
 }
