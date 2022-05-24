@@ -96,7 +96,13 @@ public class ClientGUI {
 					msg.put("y2", y2);
 					msg.put("rgb", colour.getRGB());
 					Client.send(msg);
+					System.out.println("Sent");
 				}
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println(action);
 			}
 		});
 

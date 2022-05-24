@@ -19,14 +19,14 @@ public class Client {
     private static DataInputStream reader;
     private static DataOutputStream writer;
     private static ClientGUI clientGUI;
-    private static ArrayList<String> shapes = new ArrayList<>();
+    public static ArrayList<String> actionOnCanvas = new ArrayList<>();
 
     public Client(String host, int port, String username) {
-        shapes.add("Line");
-        shapes.add("Circle");
-        shapes.add("Rectangle");
-        shapes.add("Triangle");
-        shapes.add("Text");
+        actionOnCanvas.add("Line");
+        actionOnCanvas.add("Circle");
+        actionOnCanvas.add("Rectangle");
+        actionOnCanvas.add("Triangle");
+        actionOnCanvas.add("Text");
         try {
             socket = new Socket(host, port);
             JSONObject msg = new JSONObject();
@@ -34,7 +34,14 @@ public class Client {
             writer = new DataOutputStream(socket.getOutputStream());
             msg.put("action", "Connection");
             msg.put("username", username);
-            JSONObject reply = send(msg);
+            send(msg);
+            JSONObject reply = new JSONObject();
+            JSONParser parser = new JSONParser();
+            try {
+                reply = (JSONObject) parser.parse(reader.readUTF());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             if (reply.get("reply").equals("username exists")) {
                 JOptionPane.showMessageDialog(new JLabel("error"), "Username exists, please choose another one", "Username exists", JOptionPane.ERROR_MESSAGE);
                 socket.close();
@@ -46,6 +53,16 @@ public class Client {
             } else if (reply.get("reply").equals("approved")) {
                 clientGUI = new ClientGUI();
                 clientGUI.run();
+                while (true) {
+                    try {
+                        reply = (JSONObject) parser.parse(reader.readUTF());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    if (actionOnCanvas.contains((String) reply.get("action"))) {
+                        draw(reply);
+                    }
+                }
             }
 
         } catch (UnknownHostException e) {
@@ -60,29 +77,13 @@ public class Client {
         }
     }
 
-    public static JSONObject send(JSONObject msg) {
-        JSONObject reply = new JSONObject();
+    public static void send(JSONObject msg) {
         try {
             writer.writeUTF(msg.toString());
             writer.flush();
-
-            JSONParser parser = new JSONParser();
-            try {
-                reply = (JSONObject) parser.parse(reader.readUTF());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (shapes.contains((String) reply.get("action"))) {
-            draw(reply);
-        }
-
-
-
-        return reply;
     }
 
     public static void draw(JSONObject reply) {
