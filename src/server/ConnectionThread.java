@@ -68,7 +68,12 @@ public class ConnectionThread extends Thread{
             }
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(new JLabel("error"), "Unknown error occurred", "Unknown error", JOptionPane.ERROR_MESSAGE);
+            try {
+                this.client.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
         }
     }
 
