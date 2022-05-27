@@ -13,12 +13,12 @@ import java.awt.event.MouseEvent;
 public class ClientGUI {
 
 	private JFrame frmWhiteboard;
+	private static JList userList;
 	private int x1 = 0;
 	private int y1 = 0;
 	private int x2 = 0;
 	private int y2 = 0;
 	private String action = "None";
-	private Graphics g;
 	private Color colour = Color.BLACK;
 	static JPanel canvas;
 	private String text;
@@ -169,7 +169,7 @@ public class ClientGUI {
 		text.setBounds(641, 16, 93, 23);
 		frmWhiteboard.getContentPane().add(text);
 
-		JList userList = new JList();
+		userList = new JList();
 		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		userList.setBounds(691, 49, 233, 92);
 		frmWhiteboard.getContentPane().add(userList);

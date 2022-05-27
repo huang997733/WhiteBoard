@@ -32,14 +32,14 @@ public class Server {
 
     public Server(String host, int port, String username) {
         ServerSocketFactory factory = ServerSocketFactory.getDefault();
+        usernames.add(username);
+        actionOnCanvas.add("Line");
+        actionOnCanvas.add("Circle");
+        actionOnCanvas.add("Rectangle");
+        actionOnCanvas.add("Triangle");
+        actionOnCanvas.add("Text");
         serverGUI = new ServerGUI();
         try (ServerSocket server = factory.createServerSocket(port)) {
-            usernames.add(username);
-            actionOnCanvas.add("Line");
-            actionOnCanvas.add("Circle");
-            actionOnCanvas.add("Rectangle");
-            actionOnCanvas.add("Triangle");
-            actionOnCanvas.add("Text");
             serverGUI.run();
             // Wait for connections.
             while (true) {
@@ -56,6 +56,25 @@ public class Server {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(new JLabel("error"), "Unknown error occurred", "Unknown error", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
+        }
+    }
+
+    public static String[] getUsernames() {
+        return usernames.toArray(new String[0]);
+    }
+
+    public static void share(JSONObject msg) {
+        int i = 0;
+        for (Socket c : Server.connections.values()) {
+            System.out.println(i);
+            i++;
+            try {
+                writer = new DataOutputStream(c.getOutputStream());
+                writer.writeUTF(msg.toString());
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

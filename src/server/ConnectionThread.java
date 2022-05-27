@@ -15,6 +15,7 @@ public class ConnectionThread extends Thread{
     private final Socket client;
     private DataInputStream reader;
     private DataOutputStream writer;
+    private String username;
 
     public ConnectionThread(Socket client) {
         this.client = client;
@@ -40,7 +41,7 @@ public class ConnectionThread extends Thread{
                 JSONObject reply = new JSONObject();
 
                 if (request.get("action").equals("Connection")) {
-                    String username = (String) request.get("username");
+                    username = (String) request.get("username");
                     if (Server.usernames.contains(username)) {
                         reply.put("reply", "username exists");
                         writer.writeUTF(reply.toString());
@@ -52,6 +53,7 @@ public class ConnectionThread extends Thread{
                             Server.usernames.add(username);
                             Server.connections.put(username,client);
                             reply.put("reply", "approved");
+                            ServerGUI.setUserList();
                         } else {
                             reply.put("reply", "denied");
                         }
@@ -61,7 +63,7 @@ public class ConnectionThread extends Thread{
                 } else if (Server.actionOnCanvas.contains((String) request.get("action"))) {
                     System.out.println("received1");
                     update(request);
-                    share(request);
+                    Server.share(request);
                     Server.history.add(request);
                 }
 
@@ -69,7 +71,13 @@ public class ConnectionThread extends Thread{
 
         } catch (IOException e) {
             try {
+                Server.usernames.remove(username);
+                Server.connections.remove(username);
                 this.client.close();
+                JSONObject msg = new JSONObject();
+                msg.put("action", "Disconnect");
+                Server.share(msg);
+                ServerGUI.setUserList();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -106,23 +114,6 @@ public class ConnectionThread extends Thread{
             case "Text" -> {
                 String text = (String) msg.get("text");
                 g.drawString(text, x1, y1);
-            }
-        }
-    }
-
-
-
-    public void share(JSONObject msg) {
-        int i = 0;
-        for (Socket c : Server.connections.values()) {
-            System.out.println(i);
-            i++;
-            try {
-                writer = new DataOutputStream(c.getOutputStream());
-                writer.writeUTF(msg.toString());
-                writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
