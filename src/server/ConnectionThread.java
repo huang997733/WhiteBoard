@@ -61,10 +61,7 @@ public class ConnectionThread extends Thread{
                         writer.flush();
                     }
                 } else if (Server.actionOnCanvas.contains((String) request.get("action"))) {
-                    System.out.println("received1");
-                    update(request);
-                    Server.share(request);
-                    Server.history.add(request);
+                    share(request);
                 }
 
             }
@@ -82,6 +79,23 @@ public class ConnectionThread extends Thread{
                 ex.printStackTrace();
             }
 
+        }
+    }
+
+    public void share(JSONObject msg) {
+        Server.history.add(msg);
+        update(msg);
+        int i = 0;
+        for (Socket c : Server.connections.values()) {
+            System.out.println(i);
+            i++;
+            try {
+                writer = new DataOutputStream(c.getOutputStream());
+                writer.writeUTF(msg.toString());
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

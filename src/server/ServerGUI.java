@@ -162,7 +162,7 @@ public class ServerGUI {
 		frmWhiteboardmanager.getContentPane().add(line);
 
 		JButton circle = new JButton("Circle");
-		line.addActionListener(new ActionListener() {
+		circle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				action = "Circle";
 			}
@@ -171,7 +171,7 @@ public class ServerGUI {
 		frmWhiteboardmanager.getContentPane().add(circle);
 
 		JButton triangle = new JButton("Triangle");
-		line.addActionListener(new ActionListener() {
+		triangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				action = "Triangle";
 			}
@@ -180,7 +180,7 @@ public class ServerGUI {
 		frmWhiteboardmanager.getContentPane().add(triangle);
 
 		JButton rectangle = new JButton("Rectangle");
-		line.addActionListener(new ActionListener() {
+		rectangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				action = "Rectangle";
 			}
@@ -200,7 +200,7 @@ public class ServerGUI {
 		setUserList();
 
 		JButton text = new JButton("Text");
-		line.addActionListener(new ActionListener() {
+		text.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				action = "Text";
 			}
