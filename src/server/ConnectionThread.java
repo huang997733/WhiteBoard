@@ -53,12 +53,20 @@ public class ConnectionThread extends Thread{
                             Server.usernames.add(username);
                             Server.connections.put(username,client);
                             reply.put("reply", "approved");
+                            writer.writeUTF(reply.toString());
+                            writer.flush();
                             ServerGUI.setUserList();
+                            int i = 0;
+                            while (i < Server.history.size()) {
+                                writer.writeUTF(Server.history.get(i).toString());
+                                writer.flush();
+                                i++;
+                            }
                         } else {
                             reply.put("reply", "denied");
+                            writer.writeUTF(reply.toString());
+                            writer.flush();
                         }
-                        writer.writeUTF(reply.toString());
-                        writer.flush();
                     }
                 } else if (Server.actionOnCanvas.contains((String) request.get("action"))) {
                     share(request);
@@ -71,9 +79,6 @@ public class ConnectionThread extends Thread{
                 Server.usernames.remove(username);
                 Server.connections.remove(username);
                 this.client.close();
-                JSONObject msg = new JSONObject();
-                msg.put("action", "Disconnect");
-                Server.share(msg);
                 ServerGUI.setUserList();
             } catch (IOException ex) {
                 ex.printStackTrace();

@@ -1,22 +1,20 @@
 package server;
 
-import client.Client;
+import client.ClientCanvas;
 import org.json.simple.JSONObject;
 
-import java.awt.EventQueue;
+import java.awt.*;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ServerGUI {
-
+	private final Server server;
 	private JFrame frmWhiteboardmanager;
-	static JPanel canvas;
+	static ServerCanvas canvas;
 	private static JList userList;
 	private String action = "None";
 	private int x1 = 0;
@@ -32,8 +30,9 @@ public class ServerGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ServerGUI window = new ServerGUI();
+					ServerGUI window = new ServerGUI(server);
 					window.frmWhiteboardmanager.setVisible(true);
+					System.out.println(canvas.getGraphics() == null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -44,7 +43,8 @@ public class ServerGUI {
 	/**
 	 * Create the application.
 	 */
-	public ServerGUI() {
+	public ServerGUI(Server server) {
+		this.server = server;
 		initialize();
 	}
 
@@ -90,7 +90,7 @@ public class ServerGUI {
 		JMenuItem closeFile = new JMenuItem("Close");
 		fileMenu.add(closeFile);
 
-		canvas = new JPanel();
+		canvas = new ServerCanvas();
 		canvas.setBackground(Color.WHITE);
 		canvas.setBounds(10, 47, 664, 556);
 		frmWhiteboardmanager.getContentPane().add(canvas);
@@ -110,7 +110,9 @@ public class ServerGUI {
 						msg.put("y2", y2);
 						msg.put("rgb", colour.getRGB());
 						msg.put("text", text);
-						Server.share(msg);
+						canvas.update(msg);
+						canvas.paintComponent(canvas.getGraphics());
+						server.share(msg);
 					}
 				}
 			}
@@ -126,7 +128,9 @@ public class ServerGUI {
 					msg.put("x2", x2);
 					msg.put("y2", y2);
 					msg.put("rgb", colour.getRGB());
-					Server.share(msg);
+					canvas.update(msg);
+					canvas.paintComponent(canvas.getGraphics());
+					server.share(msg);
 				}
 			}
 		});
