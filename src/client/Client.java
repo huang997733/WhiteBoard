@@ -78,6 +78,9 @@ public class Client {
                         String name = (String) reply.get("username");
                         String text = (String) reply.get("text");
                         ClientGUI.chatBox.setText(ClientGUI.chatBox.getText() + name + ": " + text + "\n");
+                    } else if (reply.get("action").equals("new")) {
+                        clientGUI.getCanvas().clear();
+                        clientGUI.getCanvas().paintComponent(clientGUI.getCanvas().getGraphics());
                     }
                 }
             }

@@ -62,4 +62,8 @@ public class ServerCanvas extends JPanel {
     public void update(JSONObject msg) {
         this.history.add(msg);
     }
+
+    public void clear() {
+        this.history.clear();
+    }
 }

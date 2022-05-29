@@ -68,7 +68,7 @@ public class Server {
     }
 
     public synchronized void share(JSONObject msg) {
-        if (!msg.get("action").equals("chat") && !msg.get("action").equals("kick")) {
+        if (actionOnCanvas.contains((String) msg.get("action"))) {
             history.add(msg);
         }
         for (Socket c : Server.connections.values()) {

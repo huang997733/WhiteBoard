@@ -8,11 +8,15 @@ import org.json.simple.JSONObject;
 
 import java.awt.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ServerGUI {
 	private final Server server;
@@ -92,12 +96,26 @@ public class ServerGUI {
 
 		JMenuItem newFile = new JMenuItem("New");
 		fileMenu.add(newFile);
+		newFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JSONObject msg = new JSONObject();
+				msg.put("action", "new");
+				server.share(msg);
+				canvas.clear();
+				canvas.paintComponent(canvas.getGraphics());
+			}
+		});
 
 		JMenuItem openFile = new JMenuItem("Open");
 		fileMenu.add(openFile);
 
 		JMenuItem saveFile = new JMenuItem("Save");
 		fileMenu.add(saveFile);
+		saveFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				save("canvas.png");
+			}
+		});
 
 		JMenuItem saveAs = new JMenuItem("Save as");
 		fileMenu.add(saveAs);
@@ -242,4 +260,41 @@ public class ServerGUI {
 		String text = (String) msg.get("text");
 		chatBox.setText(chatBox.getText() + name + ": " + text + "\n");
 	}
+
+	private void save(String path){
+		BufferedImage pic = new BufferedImage(1024, 768, BufferedImage.TYPE_INT_RGB);
+		Graphics g = pic.getGraphics();
+		g.fillRect(0, 0, 1024, 768);
+		for (JSONObject h : Server.history) {
+			String a = (String) h.get("action");
+			int x1 = (int) h.get("x1");
+			int y1 = (int) h.get("y1");
+			int x2 = (int) h.get("x2");
+			int y2 = (int) h.get("y2");
+			Color color = new Color((Integer) h.get("rgb"));
+			g.setColor(color);
+
+			switch (a) {
+				case "Line" -> g.drawLine(x1, y1, x2, y2);
+				case "Circle" -> {
+					int max = Math.max(Math.abs(x1 - x2), Math.abs(x1 - x2));
+					g.drawOval(Math.min(x1, x2), Math.min(y1, y2), max, max);
+				}
+				case "Triangle" -> {
+					int[] x = {(x1+x2)/2,x2,x1};
+					int[] y = {y1,y2,y2};
+					g.drawPolygon(x,y,3);
+				}
+				case "Rectangle" -> g.drawRect(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1 - x2), Math.abs(y1 - y2));
+				case "Text" -> g.drawString((String) h.get("text"), x1, y1);
+			}
+		}
+		try {
+			ImageIO.write(pic, "PNG", new File(path));
+			JOptionPane.showMessageDialog(new JLabel(), "Image saved", "Image saved", JOptionPane.INFORMATION_MESSAGE);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(new JLabel(), "Can't save the image", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 }
