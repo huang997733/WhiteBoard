@@ -71,6 +71,9 @@ public class Client {
                     if (actionOnCanvas.contains((String) reply.get("action"))) {
                         clientGUI.getCanvas().update(reply);
                         clientGUI.getCanvas().paintComponent(clientGUI.getCanvas().getGraphics());
+                    } else if (reply.get("action").equals("kick") && reply.get("username").equals(username)) {
+                        JOptionPane.showMessageDialog(new JLabel("kick"), "Manager has kicked you out", "Kicked out", JOptionPane.ERROR_MESSAGE);
+                        System.exit(1);
                     }
                 }
             }

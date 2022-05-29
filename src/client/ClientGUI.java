@@ -16,7 +16,6 @@ import java.awt.event.MouseEvent;
 public class ClientGUI {
 	private JFrame frmWhiteboard;
 	static ClientCanvas canvas;
-	private static JList userList;
 	private String action = "None";
 	private int x1 = 0;
 	private int y1 = 0;
@@ -107,7 +106,7 @@ public class ClientGUI {
 
 		JTextArea chatBox = new JTextArea();
 		chatBox.setEditable(false);
-		chatBox.setBounds(694, 201, 231, 281);
+		chatBox.setBounds(694, 47, 231, 435);
 		frmWhiteboard.getContentPane().add(chatBox);
 
 		JButton send = new JButton("Send");
@@ -122,17 +121,13 @@ public class ClientGUI {
 		typeBox.setBounds(694, 490, 231, 113);
 		frmWhiteboard.getContentPane().add(typeBox);
 
-		JButton curve = new JButton("Curve");
-		curve.setBounds(53, 14, 93, 23);
-		frmWhiteboard.getContentPane().add(curve);
-
 		JButton line = new JButton("Line");
 		line.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				action = "Line";
 			}
 		});
-		line.setBounds(156, 14, 93, 23);
+		line.setBounds(53, 14, 93, 23);
 		frmWhiteboard.getContentPane().add(line);
 
 		JButton circle = new JButton("Circle");
@@ -141,7 +136,7 @@ public class ClientGUI {
 				action = "Circle";
 			}
 		});
-		circle.setBounds(259, 14, 93, 23);
+		circle.setBounds(156, 14, 93, 23);
 		frmWhiteboard.getContentPane().add(circle);
 
 		JButton triangle = new JButton("Triangle");
@@ -150,7 +145,7 @@ public class ClientGUI {
 				action = "Triangle";
 			}
 		});
-		triangle.setBounds(362, 14, 93, 23);
+		triangle.setBounds(259, 14, 93, 23);
 		frmWhiteboard.getContentPane().add(triangle);
 
 		JButton rectangle = new JButton("Rectangle");
@@ -159,18 +154,13 @@ public class ClientGUI {
 				action = "Rectangle";
 			}
 		});
-		rectangle.setBounds(465, 14, 93, 23);
+		rectangle.setBounds(362, 14, 93, 23);
 		frmWhiteboard.getContentPane().add(rectangle);
 
 		JButton colour = new JButton("Colour");
 		colour.addActionListener(e -> this.colour = JColorChooser.showDialog(frmWhiteboard, "select colour", Color.black));
-		colour.setBounds(568, 14, 93, 23);
+		colour.setBounds(465, 14, 93, 23);
 		frmWhiteboard.getContentPane().add(colour);
-
-		userList = new JList();
-		userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		userList.setBounds(694, 47, 231, 144);
-		frmWhiteboard.getContentPane().add(userList);
 
 		JButton text = new JButton("Text");
 		text.addActionListener(new ActionListener() {
@@ -178,7 +168,7 @@ public class ClientGUI {
 				action = "Text";
 			}
 		});
-		text.setBounds(671, 14, 93, 23);
+		text.setBounds(568, 14, 93, 23);
 		frmWhiteboard.getContentPane().add(text);
 	}
 }

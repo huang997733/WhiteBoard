@@ -65,6 +65,17 @@ public class ServerGUI {
 		JButton kick = new JButton("Kick");
 		kick.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int i = userList.getSelectedIndex();
+				if (i > 0) {
+					JSONObject msg = new JSONObject();
+					String name = Server.getUsernames()[i];
+					msg.put("action", "kick");
+					msg.put("username", name);
+					server.share(msg);
+					Server.usernames.remove(name);
+					Server.connections.remove(name);
+					setUserList();
+				}
 			}
 		});
 		kick.setBounds(832, 14, 93, 23);
@@ -155,17 +166,13 @@ public class ServerGUI {
 		typeBox.setBounds(694, 490, 231, 113);
 		frmWhiteboardmanager.getContentPane().add(typeBox);
 
-		JButton curve = new JButton("Curve");
-		curve.setBounds(53, 14, 93, 23);
-		frmWhiteboardmanager.getContentPane().add(curve);
-
 		JButton line = new JButton("Line");
 		line.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				action = "Line";
 			}
 		});
-		line.setBounds(156, 14, 93, 23);
+		line.setBounds(53, 14, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(line);
 
 		JButton circle = new JButton("Circle");
@@ -174,7 +181,7 @@ public class ServerGUI {
 				action = "Circle";
 			}
 		});
-		circle.setBounds(259, 14, 93, 23);
+		circle.setBounds(156, 14, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(circle);
 
 		JButton triangle = new JButton("Triangle");
@@ -183,7 +190,7 @@ public class ServerGUI {
 				action = "Triangle";
 			}
 		});
-		triangle.setBounds(362, 14, 93, 23);
+		triangle.setBounds(259, 14, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(triangle);
 
 		JButton rectangle = new JButton("Rectangle");
@@ -192,12 +199,12 @@ public class ServerGUI {
 				action = "Rectangle";
 			}
 		});
-		rectangle.setBounds(465, 14, 93, 23);
+		rectangle.setBounds(362, 14, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(rectangle);
 
 		JButton colour = new JButton("Colour");
 		colour.addActionListener(e -> this.colour = JColorChooser.showDialog(frmWhiteboardmanager, "select colour", Color.black));
-		colour.setBounds(568, 14, 93, 23);
+		colour.setBounds(465, 14, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(colour);
 
 		userList = new JList();
@@ -212,7 +219,7 @@ public class ServerGUI {
 				action = "Text";
 			}
 		});
-		text.setBounds(671, 14, 93, 23);
+		text.setBounds(568, 14, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(text);
 	}
 
