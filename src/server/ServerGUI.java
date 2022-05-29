@@ -1,3 +1,6 @@
+/**
+ * author: Ziyang Huang 1067800
+ */
 package server;
 
 import client.ClientCanvas;

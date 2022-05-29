@@ -1,3 +1,6 @@
+/**
+ * author: Ziyang Huang 1067800
+ */
 package client;
 
 import org.json.simple.JSONObject;
@@ -70,7 +73,6 @@ public class Client {
                         clientGUI.getCanvas().paintComponent(clientGUI.getCanvas().getGraphics());
                     }
                 }
-//                new Read().start();
             }
 
         } catch (UnknownHostException e) {
@@ -96,22 +98,4 @@ public class Client {
         }
     }
 
-//    class Read extends Thread {
-//        public Read() {}
-//
-//        @Override
-//        public void run() {
-//            JSONObject reply = new JSONObject();
-//            JSONParser parser = new JSONParser();
-//            try {
-//                reply = (JSONObject) parser.parse(reader.readUTF());
-//            } catch (ParseException | IOException e) {
-//                e.printStackTrace();
-//            }
-//            if (actionOnCanvas.contains((String) reply.get("action"))) {
-//                clientGUI.getCanvas().update(reply);
-//                clientGUI.getCanvas().paintComponent(clientGUI.getCanvas().getGraphics());
-//            }
-//        }
-//    }
 }

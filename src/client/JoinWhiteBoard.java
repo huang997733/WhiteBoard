@@ -1,7 +1,13 @@
+/**
+ * author: Ziyang Huang 1067800
+ */
 package client;
 
 import javax.swing.*;
 
+/**
+ * Join an existing white board
+ */
 public class JoinWhiteBoard {
     private static String host;
     private static int port;
@@ -9,6 +15,7 @@ public class JoinWhiteBoard {
 
 
     public static void main(String[] args) {
+        // check command line input
         if (args.length != 3) {
             JOptionPane.showMessageDialog(new JLabel("error"), "Please enter: <host> <port> <username>", "Wrong parameters", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
@@ -27,7 +34,7 @@ public class JoinWhiteBoard {
             JOptionPane.showMessageDialog(new JLabel("error"), "Port format incorrect", "Incorrect format", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
-
+        // create a Client instance
         new Client(host, port, username);
     }
 }
