@@ -26,6 +26,7 @@ import static java.lang.Thread.sleep;
 
 public class Server {
     static ArrayList<String> usernames = new ArrayList<>();
+    static String name;
     private static DataOutputStream writer;
     private static DataInputStream reader;
     public static ArrayList<JSONObject> history = new ArrayList<>();
@@ -34,6 +35,7 @@ public class Server {
 
     public Server(String host, int port, String username) {
         ServerSocketFactory factory = ServerSocketFactory.getDefault();
+        name = username;
         usernames.add(username);
         actionOnCanvas.add("Line");
         actionOnCanvas.add("Circle");
@@ -48,7 +50,7 @@ public class Server {
                 Socket client = server.accept();
 
                 // Start a new thread for a connection
-                ConnectionThread clientThread = new ConnectionThread(client);
+                ConnectionThread clientThread = new ConnectionThread(client, serverGUI);
                 clientThread.start();
             }
 
@@ -65,12 +67,11 @@ public class Server {
         return usernames.toArray(new String[0]);
     }
 
-    public void share(JSONObject msg) {
-        history.add(msg);
-        int i = 0;
+    public synchronized void share(JSONObject msg) {
+        if (!msg.get("action").equals("chat") && !msg.get("action").equals("kick")) {
+            history.add(msg);
+        }
         for (Socket c : Server.connections.values()) {
-            System.out.println(i);
-            i++;
             try {
                 writer = new DataOutputStream(c.getOutputStream());
                 writer.writeUTF(msg.toString());

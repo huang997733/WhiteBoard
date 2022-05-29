@@ -57,7 +57,7 @@ public class Client {
                 socket.close();
                 System.exit(1);
             } else if (reply.get("reply").equals("approved")) {
-                clientGUI = new ClientGUI();
+                clientGUI = new ClientGUI(this, username);
                 clientGUI.run();
                 while (clientGUI.getCanvas().getGraphics()==null) {
                     sleep(10);
@@ -74,6 +74,10 @@ public class Client {
                     } else if (reply.get("action").equals("kick") && reply.get("username").equals(username)) {
                         JOptionPane.showMessageDialog(new JLabel("kick"), "Manager has kicked you out", "Kicked out", JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
+                    } else if (reply.get("action").equals("chat")) {
+                        String name = (String) reply.get("username");
+                        String text = (String) reply.get("text");
+                        ClientGUI.chatBox.setText(ClientGUI.chatBox.getText() + name + ": " + text + "\n");
                     }
                 }
             }

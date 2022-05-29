@@ -26,6 +26,8 @@ public class ServerGUI {
 	private int y2 = 0;
 	private Color colour = Color.BLACK;
 	private String text;
+	private JTextArea typeBox;
+	static JTextArea chatBox;
 	/**
 	 * Launch the application.
 	 */
@@ -35,7 +37,6 @@ public class ServerGUI {
 				try {
 					ServerGUI window = new ServerGUI(server);
 					window.frmWhiteboardmanager.setVisible(true);
-					System.out.println(canvas.getGraphics() == null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -149,7 +150,7 @@ public class ServerGUI {
 			}
 		});
 
-		JTextArea chatBox = new JTextArea();
+		chatBox = new JTextArea();
 		chatBox.setEditable(false);
 		chatBox.setBounds(694, 201, 231, 281);
 		frmWhiteboardmanager.getContentPane().add(chatBox);
@@ -157,12 +158,22 @@ public class ServerGUI {
 		JButton send = new JButton("Send");
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String text = typeBox.getText();
+				if (!text.equals("")) {
+					JSONObject msg = new JSONObject();
+					msg.put("action", "chat");
+					msg.put("username", Server.name);
+					msg.put("text", text);
+					server.share(msg);
+					chatBox.setText(chatBox.getText() + Server.name + ": " + text + "\n");
+					typeBox.setText("");
+				}
 			}
 		});
 		send.setBounds(832, 580, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(send);
 
-		JTextArea typeBox = new JTextArea();
+		typeBox = new JTextArea();
 		typeBox.setBounds(694, 490, 231, 113);
 		frmWhiteboardmanager.getContentPane().add(typeBox);
 
@@ -225,5 +236,10 @@ public class ServerGUI {
 
 	public static void setUserList() {
 		userList.setListData(Server.getUsernames());
+	}
+	public void updateChatBox(JSONObject msg) {
+		String name = (String) msg.get("username");
+		String text = (String) msg.get("text");
+		chatBox.setText(chatBox.getText() + name + ": " + text + "\n");
 	}
 }

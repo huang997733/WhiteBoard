@@ -16,12 +16,14 @@ import java.net.Socket;
 
 public class ConnectionThread extends Thread{
     private final Socket client;
+    private ServerGUI serverGUI;
     private DataInputStream reader;
     private DataOutputStream writer;
     private String username;
 
-    public ConnectionThread(Socket client) {
+    public ConnectionThread(Socket client, ServerGUI serverGUI) {
         this.client = client;
+        this.serverGUI = serverGUI;
     }
 
     @Override
@@ -73,6 +75,8 @@ public class ConnectionThread extends Thread{
                     }
                 } else if (Server.actionOnCanvas.contains((String) request.get("action"))) {
                     share(request);
+                } else if (request.get("action").equals("chat")) {
+                    share(request);
                 }
 
             }
@@ -90,13 +94,16 @@ public class ConnectionThread extends Thread{
         }
     }
 
-    public void share(JSONObject msg) {
-        Server.history.add(msg);
-        update(msg);
-        int i = 0;
+    public synchronized void share(JSONObject msg) {
+        if (!msg.get("action").equals("chat") && !msg.get("action").equals("kick")) {
+            Server.history.add(msg);
+            update(msg);
+        } else if (msg.get("action").equals("chat")) {
+            String name = (String) msg.get("username");
+            String text = (String) msg.get("text");
+            ServerGUI.chatBox.setText(ServerGUI.chatBox.getText() + name + ": " + text + "\n");
+        }
         for (Socket c : Server.connections.values()) {
-            System.out.println(i);
-            i++;
             try {
                 writer = new DataOutputStream(c.getOutputStream());
                 writer.writeUTF(msg.toString());

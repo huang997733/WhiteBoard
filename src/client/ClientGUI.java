@@ -4,6 +4,7 @@
 package client;
 
 import org.json.simple.JSONObject;
+import server.Server;
 
 import java.awt.*;
 
@@ -14,6 +15,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ClientGUI {
+	private Client client;
+	private String username;
 	private JFrame frmWhiteboard;
 	static ClientCanvas canvas;
 	private String action = "None";
@@ -23,9 +26,16 @@ public class ClientGUI {
 	private int y2 = 0;
 	private Color colour = Color.BLACK;
 	private String text;
+	static JTextArea chatBox;
+	private JTextArea typeBox;
+	private String chat = "";
 
 	public ClientCanvas getCanvas() {
 		return canvas;
+	}
+
+	public JTextArea getChatBox() {
+		return chatBox;
 	}
 
 	/**
@@ -35,9 +45,8 @@ public class ClientGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ClientGUI window = new ClientGUI();
+					ClientGUI window = new ClientGUI(client, username);
 					window.frmWhiteboard.setVisible(true);
-					System.out.println(canvas.getGraphics() == null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,7 +57,9 @@ public class ClientGUI {
 	/**
 	 * Create the application.
 	 */
-	public ClientGUI() {
+	public ClientGUI(Client client, String name) {
+		this.client = client;
+		this.username = name;
 		initialize();
 	}
 
@@ -104,7 +115,7 @@ public class ClientGUI {
 			}
 		});
 
-		JTextArea chatBox = new JTextArea();
+		chatBox = new JTextArea();
 		chatBox.setEditable(false);
 		chatBox.setBounds(694, 47, 231, 435);
 		frmWhiteboard.getContentPane().add(chatBox);
@@ -112,12 +123,21 @@ public class ClientGUI {
 		JButton send = new JButton("Send");
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String text = typeBox.getText();
+				if (!text.equals("")) {
+					JSONObject msg = new JSONObject();
+					msg.put("action", "chat");
+					msg.put("username", username);
+					msg.put("text", text);
+					Client.send(msg);
+					typeBox.setText("");
+				}
 			}
 		});
 		send.setBounds(832, 580, 93, 23);
 		frmWhiteboard.getContentPane().add(send);
 
-		JTextArea typeBox = new JTextArea();
+		typeBox = new JTextArea();
 		typeBox.setBounds(694, 490, 231, 113);
 		frmWhiteboard.getContentPane().add(typeBox);
 
