@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class ClientCanvas extends JPanel {
@@ -17,6 +18,7 @@ public class ClientCanvas extends JPanel {
     String action = "None";
     String text;
     private ArrayList<JSONObject> history = new ArrayList<>();
+    private BufferedImage image;
 
     public ClientCanvas() {
         super();
@@ -25,6 +27,7 @@ public class ClientCanvas extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.drawImage(image,0,0,null);
         for (JSONObject msg : history) {
             action = (String) msg.get("action");
             x1 = ((Long) msg.get("x1")).intValue();
@@ -62,8 +65,11 @@ public class ClientCanvas extends JPanel {
     public void update(JSONObject msg) {
         this.history.add(msg);
     }
-
+    public void loadImage(BufferedImage image) {
+        this.image = image;
+    }
     public void clear() {
         this.history.clear();
+        this.image = null;
     }
 }

@@ -8,10 +8,13 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import server.Server;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -80,6 +83,17 @@ public class Client {
                         ClientGUI.chatBox.setText(ClientGUI.chatBox.getText() + name + ": " + text + "\n");
                     } else if (reply.get("action").equals("new")) {
                         clientGUI.getCanvas().clear();
+                        clientGUI.getCanvas().paintComponent(clientGUI.getCanvas().getGraphics());
+                    } else if (reply.get("action").equals("close")) {
+                        JOptionPane.showMessageDialog(new JLabel("close"), "Manager closed the whiteboard", "Close", JOptionPane.ERROR_MESSAGE);
+                        socket.close();
+                        System.exit(1);
+                    } else if (reply.get("action").equals("open")) {
+                        String path = (String) reply.get("image");
+                        File file = new File(path);
+                        BufferedImage image = ImageIO.read(file);
+                        clientGUI.getCanvas().clear();
+                        clientGUI.getCanvas().loadImage(image);
                         clientGUI.getCanvas().paintComponent(clientGUI.getCanvas().getGraphics());
                     }
                 }

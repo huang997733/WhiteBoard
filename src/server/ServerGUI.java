@@ -108,6 +108,25 @@ public class ServerGUI {
 
 		JMenuItem openFile = new JMenuItem("Open");
 		fileMenu.add(openFile);
+		openFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.showOpenDialog(null);
+				File file = chooser.getSelectedFile();
+				try {
+					BufferedImage image = ImageIO.read(file);
+					JSONObject msg = new JSONObject();
+					msg.put("action", "open");
+					msg.put("image", file.getAbsolutePath());
+					server.share(msg);
+					canvas.clear();
+					canvas.loadImage(image);
+					canvas.paintComponent(canvas.getGraphics());
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(new JLabel("error"), "Can't read image", "Can't read image", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 
 		JMenuItem saveFile = new JMenuItem("Save");
 		fileMenu.add(saveFile);
@@ -119,9 +138,32 @@ public class ServerGUI {
 
 		JMenuItem saveAs = new JMenuItem("Save as");
 		fileMenu.add(saveAs);
+		saveAs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser();
+				chooser.showSaveDialog(null);
+				File file = chooser.getSelectedFile();
+				String path = file.getAbsolutePath();
+				if (!(path.endsWith(".png"))){
+					path += ".png";
+				}
+				save(path);
+			}
+		});
 
 		JMenuItem closeFile = new JMenuItem("Close");
 		fileMenu.add(closeFile);
+		closeFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int result = JOptionPane.showConfirmDialog(new JLabel(), "Do you want to close your whiteboard", "Close", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					JSONObject msg = new JSONObject();
+					msg.put("action", "close");
+					server.share(msg);
+					System.exit(1);
+				}
+			}
+		});
 
 		canvas = new ServerCanvas();
 		canvas.setBackground(Color.WHITE);
@@ -265,6 +307,7 @@ public class ServerGUI {
 		BufferedImage pic = new BufferedImage(1024, 768, BufferedImage.TYPE_INT_RGB);
 		Graphics g = pic.getGraphics();
 		g.fillRect(0, 0, 1024, 768);
+		g.drawImage(canvas.getImage(),0,0,null);
 		for (JSONObject h : Server.history) {
 			String a = (String) h.get("action");
 			int x1 = (int) h.get("x1");
