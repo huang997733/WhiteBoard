@@ -280,7 +280,12 @@ public class ServerGUI {
 		frmWhiteboardmanager.getContentPane().add(rectangle);
 
 		JButton colour = new JButton("Colour");
-		colour.addActionListener(e -> this.colour = JColorChooser.showDialog(frmWhiteboardmanager, "select colour", Color.black));
+		colour.addActionListener(e -> {
+			this.colour = JColorChooser.showDialog(frmWhiteboardmanager, "select colour", this.colour);
+			if (this.colour == null) {
+				this.colour = Color.BLACK;
+			}
+		});
 		colour.setBounds(465, 14, 93, 23);
 		frmWhiteboardmanager.getContentPane().add(colour);
 
