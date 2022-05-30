@@ -17,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
+
 /**
  * server side GUI
  */
@@ -166,6 +168,11 @@ public class ServerGUI {
 					JSONObject msg = new JSONObject();
 					msg.put("action", "close");
 					server.share(msg);
+					try {
+						sleep(1000);
+					} catch (InterruptedException ex) {
+						ex.printStackTrace();
+					}
 					System.exit(1);
 				}
 			}

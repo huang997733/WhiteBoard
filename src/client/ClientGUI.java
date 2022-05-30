@@ -176,7 +176,12 @@ public class ClientGUI {
 		frmWhiteboard.getContentPane().add(rectangle);
 
 		JButton colour = new JButton("Colour");
-		colour.addActionListener(e -> this.colour = JColorChooser.showDialog(frmWhiteboard, "select colour", Color.black));
+		colour.addActionListener(e -> {
+			this.colour = JColorChooser.showDialog(frmWhiteboard, "select colour", this.colour);
+			if (this.colour == null) {
+				this.colour = Color.BLACK;
+			}
+		});
 		colour.setBounds(465, 14, 93, 23);
 		frmWhiteboard.getContentPane().add(colour);
 
