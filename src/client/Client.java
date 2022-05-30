@@ -23,13 +23,19 @@ import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * client which is the user
+ */
 public class Client {
-    private Socket socket;
-    private static DataInputStream reader;
     private static DataOutputStream writer;
-    private static ClientGUI clientGUI;
     public static ArrayList<String> actionOnCanvas = new ArrayList<>();
 
+    /**
+     * client instance constructor
+     * @param host ip
+     * @param port port
+     * @param username username
+     */
     public Client(String host, int port, String username) {
         actionOnCanvas.add("Line");
         actionOnCanvas.add("Circle");
@@ -37,10 +43,12 @@ public class Client {
         actionOnCanvas.add("Triangle");
         actionOnCanvas.add("Text");
         try {
-            socket = new Socket(host, port);
+            // establish connection
+            Socket socket = new Socket(host, port);
             JSONObject msg = new JSONObject();
-            reader = new DataInputStream(socket.getInputStream());
+            DataInputStream reader = new DataInputStream(socket.getInputStream());
             writer = new DataOutputStream(socket.getOutputStream());
+            // send connection request
             msg.put("action", "Connection");
             msg.put("username", username);
             send(msg);
@@ -52,20 +60,24 @@ public class Client {
                 e.printStackTrace();
             }
             if (reply.get("reply").equals("username exists")) {
+                // username already exists
                 JOptionPane.showMessageDialog(new JLabel("error"), "Username exists, please choose another one", "Username exists", JOptionPane.ERROR_MESSAGE);
                 socket.close();
                 System.exit(1);
             } else if (reply.get("reply").equals("denied")) {
+                // manager denied the connection request
                 JOptionPane.showMessageDialog(new JLabel("error"), "Manager denied your connection request", "Connection denied", JOptionPane.ERROR_MESSAGE);
                 socket.close();
                 System.exit(1);
             } else if (reply.get("reply").equals("approved")) {
-                clientGUI = new ClientGUI(this, username);
+                // manager approved the connection request
+                ClientGUI clientGUI = new ClientGUI(this, username);
                 clientGUI.run();
                 while (clientGUI.getCanvas().getGraphics()==null) {
                     sleep(10);
                 }
                 while (true) {
+                    // receive messages from the server
                     try {
                         reply = (JSONObject) parser.parse(reader.readUTF());
                     } catch (ParseException e) {
@@ -114,6 +126,10 @@ public class Client {
         }
     }
 
+    /**
+     * send message to the server
+     * @param msg the request
+     */
     public static void send(JSONObject msg) {
         try {
             writer.writeUTF(msg.toString());

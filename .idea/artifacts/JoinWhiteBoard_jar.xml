@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JoinWhiteBoard:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/JoinWhiteBoard.jar</output-path>
+    <root id="archive" name="WhiteBoard.jar">
+      <element id="module-output" name="WhiteBoard" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/json-simple-1.1.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

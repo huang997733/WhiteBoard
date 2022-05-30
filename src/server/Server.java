@@ -24,15 +24,22 @@ import org.json.simple.parser.ParseException;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * server which is the manager
+ */
 public class Server {
-    static ArrayList<String> usernames = new ArrayList<>();
-    static String name;
-    private static DataOutputStream writer;
-    private static DataInputStream reader;
-    public static ArrayList<JSONObject> history = new ArrayList<>();
-    static HashMap<String, Socket> connections = new HashMap<>();
-    static ArrayList<String> actionOnCanvas = new ArrayList<>();
+    public static ArrayList<String> usernames = new ArrayList<>();       // store all the usernames
+    public static String name;
+    public static ArrayList<JSONObject> history = new ArrayList<>();     // store all the actions
+    public static HashMap<String, Socket> connections = new HashMap<>(); // store all the connections
+    public static ArrayList<String> actionOnCanvas = new ArrayList<>();  // store all actions which change the canvas
 
+    /**
+     * Server instance constructor
+     * @param host ip
+     * @param port port
+     * @param username username of the manager
+     */
     public Server(String host, int port, String username) {
         ServerSocketFactory factory = ServerSocketFactory.getDefault();
         name = username;
@@ -63,17 +70,26 @@ public class Server {
         }
     }
 
+    /**
+     * get the current usernames
+     * @return a String list
+     */
     public static String[] getUsernames() {
         return usernames.toArray(new String[0]);
     }
 
+
+    /**
+     * share the message to all the users of the system
+     * @param msg a json object which contains the message
+     */
     public synchronized void share(JSONObject msg) {
         if (actionOnCanvas.contains((String) msg.get("action"))) {
             history.add(msg);
         }
         for (Socket c : Server.connections.values()) {
             try {
-                writer = new DataOutputStream(c.getOutputStream());
+                DataOutputStream writer = new DataOutputStream(c.getOutputStream());
                 writer.writeUTF(msg.toString());
                 writer.flush();
             } catch (IOException e) {

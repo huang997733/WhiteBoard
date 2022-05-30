@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * client side canvas extends JPanel
+ */
 public class ClientCanvas extends JPanel {
     int x1;
     int y1;
@@ -17,7 +20,7 @@ public class ClientCanvas extends JPanel {
     int y2;
     String action = "None";
     String text;
-    private ArrayList<JSONObject> history = new ArrayList<>();
+    private final ArrayList<JSONObject> history = new ArrayList<>();
     private BufferedImage image;
 
     public ClientCanvas() {
@@ -27,7 +30,9 @@ public class ClientCanvas extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        // draw the preloaded image
         g.drawImage(image,0,0,null);
+        // draw everything in the history
         for (JSONObject msg : history) {
             action = (String) msg.get("action");
             x1 = ((Long) msg.get("x1")).intValue();
@@ -61,13 +66,25 @@ public class ClientCanvas extends JPanel {
         }
 
     }
-
+    /**
+     * add the action to history which is used to paint the canvas
+     * @param msg the message which contains the action on the canvas
+     */
     public void update(JSONObject msg) {
         this.history.add(msg);
     }
+
+    /**
+     * save the image which is used to paint the canvas
+     * @param image the image which we want to draw on the canvas
+     */
     public void loadImage(BufferedImage image) {
         this.image = image;
     }
+
+    /**
+     * clear the canvas
+     */
     public void clear() {
         this.history.clear();
         this.image = null;

@@ -3,7 +3,6 @@
  */
 package server;
 
-import client.ClientCanvas;
 import org.json.simple.JSONObject;
 
 import java.awt.*;
@@ -18,6 +17,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * server side GUI
+ */
 public class ServerGUI {
 	private final Server server;
 	private JFrame frmWhiteboardmanager;
@@ -113,17 +115,19 @@ public class ServerGUI {
 				JFileChooser chooser = new JFileChooser();
 				chooser.showOpenDialog(null);
 				File file = chooser.getSelectedFile();
-				try {
-					BufferedImage image = ImageIO.read(file);
-					JSONObject msg = new JSONObject();
-					msg.put("action", "open");
-					msg.put("image", file.getAbsolutePath());
-					server.share(msg);
-					canvas.clear();
-					canvas.loadImage(image);
-					canvas.paintComponent(canvas.getGraphics());
-				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(new JLabel("error"), "Can't read image", "Can't read image", JOptionPane.ERROR_MESSAGE);
+				if (file != null) {
+					try {
+						BufferedImage image = ImageIO.read(file);
+						JSONObject msg = new JSONObject();
+						msg.put("action", "open");
+						msg.put("image", file.getAbsolutePath());
+						server.share(msg);
+						canvas.clear();
+						canvas.loadImage(image);
+						canvas.paintComponent(canvas.getGraphics());
+					} catch (IOException ex) {
+						JOptionPane.showMessageDialog(new JLabel("error"), "Can't read image", "Can't read image", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -143,11 +147,13 @@ public class ServerGUI {
 				JFileChooser chooser = new JFileChooser();
 				chooser.showSaveDialog(null);
 				File file = chooser.getSelectedFile();
-				String path = file.getAbsolutePath();
-				if (!(path.endsWith(".png"))){
-					path += ".png";
+				if (file != null) {
+					String path = file.getAbsolutePath();
+					if (!(path.endsWith(".png"))){
+						path += ".png";
+					}
+					save(path);
 				}
-				save(path);
 			}
 		});
 
@@ -294,15 +300,17 @@ public class ServerGUI {
 		frmWhiteboardmanager.getContentPane().add(text);
 	}
 
+	/**
+	 * update the user list
+	 */
 	public static void setUserList() {
 		userList.setListData(Server.getUsernames());
 	}
-	public void updateChatBox(JSONObject msg) {
-		String name = (String) msg.get("username");
-		String text = (String) msg.get("text");
-		chatBox.setText(chatBox.getText() + name + ": " + text + "\n");
-	}
 
+	/**
+	 * save the canvas to the given path
+	 * @param path the path manager wants to save to
+	 */
 	private void save(String path){
 		BufferedImage pic = new BufferedImage(1024, 768, BufferedImage.TYPE_INT_RGB);
 		Graphics g = pic.getGraphics();

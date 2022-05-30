@@ -14,9 +14,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * client side GUI
+ */
 public class ClientGUI {
-	private Client client;
-	private String username;
+	private final Client client;
+	private final String username;
 	private JFrame frmWhiteboard;
 	static ClientCanvas canvas;
 	private String action = "None";
@@ -28,14 +31,9 @@ public class ClientGUI {
 	private String text;
 	static JTextArea chatBox;
 	private JTextArea typeBox;
-	private String chat = "";
 
 	public ClientCanvas getCanvas() {
 		return canvas;
-	}
-
-	public JTextArea getChatBox() {
-		return chatBox;
 	}
 
 	/**

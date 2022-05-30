@@ -14,22 +14,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * One thread for one client
+ */
 public class ConnectionThread extends Thread{
     private final Socket client;
-    private ServerGUI serverGUI;
-    private DataInputStream reader;
     private DataOutputStream writer;
     private String username;
 
     public ConnectionThread(Socket client, ServerGUI serverGUI) {
         this.client = client;
-        this.serverGUI = serverGUI;
     }
 
     @Override
     public void run() {
         try {
-            reader = new DataInputStream(client.getInputStream());
+            DataInputStream reader = new DataInputStream(client.getInputStream());
             writer = new DataOutputStream(client.getOutputStream());
 
             while (true) {
@@ -44,16 +44,19 @@ public class ConnectionThread extends Thread{
                     System.exit(1);
                 }
                 JSONObject reply = new JSONObject();
-
+                // client request for connection
                 if (request.get("action").equals("Connection")) {
                     username = (String) request.get("username");
+                    // check if the username already exists
                     if (Server.usernames.contains(username)) {
                         reply.put("reply", "username exists");
                         writer.writeUTF(reply.toString());
                         writer.flush();
                         client.close();
                     } else {
+                        // pop up a confirm dialog for manager
                         int result = JOptionPane.showConfirmDialog(new JLabel(), username + " wants to share your whiteboard", "New connection", JOptionPane.YES_NO_OPTION);
+                        // connection approved
                         if (result == JOptionPane.YES_OPTION) {
                             Server.usernames.add(username);
                             Server.connections.put(username,client);
@@ -61,6 +64,7 @@ public class ConnectionThread extends Thread{
                             writer.writeUTF(reply.toString());
                             writer.flush();
                             ServerGUI.setUserList();
+                            // send action history to the user to synchronize his canvas
                             int i = 0;
                             while (i < Server.history.size()) {
                                 writer.writeUTF(Server.history.get(i).toString());
@@ -68,21 +72,19 @@ public class ConnectionThread extends Thread{
                                 i++;
                             }
                         } else {
+                            // connection disapproved
                             reply.put("reply", "denied");
                             writer.writeUTF(reply.toString());
                             writer.flush();
                         }
                     }
-                } else if (Server.actionOnCanvas.contains((String) request.get("action"))) {
-                    share(request);
-                } else if (request.get("action").equals("chat")) {
+                } else {
                     share(request);
                 }
-
             }
-
         } catch (IOException e) {
             try {
+                // user disconnects
                 Server.usernames.remove(username);
                 Server.connections.remove(username);
                 this.client.close();
@@ -94,6 +96,10 @@ public class ConnectionThread extends Thread{
         }
     }
 
+    /**
+     * share the message to all users
+     * @param msg a json object contains the message
+     */
     public synchronized void share(JSONObject msg) {
         if (!msg.get("action").equals("chat") && !msg.get("action").equals("kick")) {
             Server.history.add(msg);
@@ -101,6 +107,7 @@ public class ConnectionThread extends Thread{
         } else if (msg.get("action").equals("chat")) {
             String name = (String) msg.get("username");
             String text = (String) msg.get("text");
+            // update the chat box
             ServerGUI.chatBox.setText(ServerGUI.chatBox.getText() + name + ": " + text + "\n");
         }
         for (Socket c : Server.connections.values()) {
@@ -114,7 +121,10 @@ public class ConnectionThread extends Thread{
         }
     }
 
-
+    /**
+     * update the canvas
+     * @param msg a json object which tells the canvas what to draw
+     */
     static void update(JSONObject msg) {
         int x1 = ((Long) msg.get("x1")).intValue();
         int y1 = ((Long) msg.get("y1")).intValue();
