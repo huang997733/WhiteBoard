@@ -84,8 +84,9 @@ public class Client {
                     } else if (reply.get("action").equals("new")) {
                         clientGUI.getCanvas().clear();
                         clientGUI.getCanvas().paintComponent(clientGUI.getCanvas().getGraphics());
+                        JOptionPane.showMessageDialog(new JLabel("new"), "Manager created a new whiteboard", "New", JOptionPane.INFORMATION_MESSAGE);
                     } else if (reply.get("action").equals("close")) {
-                        JOptionPane.showMessageDialog(new JLabel("close"), "Manager closed the whiteboard", "Close", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(new JLabel("close"), "Manager closed the whiteboard", "Close", JOptionPane.INFORMATION_MESSAGE);
                         socket.close();
                         System.exit(1);
                     } else if (reply.get("action").equals("open")) {
@@ -106,7 +107,7 @@ public class Client {
             JOptionPane.showMessageDialog(new JLabel("error"), "Cannot connect to server", "Connection Error", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }catch (IOException e) {
-            JOptionPane.showMessageDialog(new JLabel("error"), "Unknown Error", "Unknown Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JLabel("error"), "Manager offline, closing application", "Manager offline", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         } catch (InterruptedException e) {
             e.printStackTrace();
